@@ -1,4 +1,5 @@
 #!/bin/bash
+date
 
 # Execute the hostnamectl command and store the output in the 'output' variable
 output=$(hostnamectl)
@@ -19,4 +20,6 @@ fi
 # Corrected the condition for Ubuntu detection (use double equals '==')
 if [ "$os_name" == "Ubuntu" ]; then
     echo "Detected Ubuntu, running apt update commands"
+    apt update
+    apt upgrade -y
 fi
