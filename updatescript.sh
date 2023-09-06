@@ -18,10 +18,9 @@ else
     exit 1
 fi
 
-# Corrected the condition for Ubuntu detection (use double equals '==')
+# Check if the OS name is "Ubuntu" (using double equals '==')
 if [ "$os_name" == "Ubuntu" ]; then
-    echo "Detected Ubuntu, running apt update commands"
+    echo "Detected Ubuntu, running apt update and upgrade commands"
     apt update
     apt upgrade -y
 fi
-
