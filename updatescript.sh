@@ -15,3 +15,7 @@ if [ -n "$os_name" ]; then
 else
     echo "Operating System not found."
 fi
+
+if $os_name = "Ubuntu"; then 
+    echo "Detected Ubuntu, running apt update commands"
+    
