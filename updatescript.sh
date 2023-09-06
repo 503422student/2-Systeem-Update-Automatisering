@@ -16,6 +16,7 @@ else
     echo "Operating System not found."
 fi
 
-if $os_name = "Ubuntu"; then 
+# Corrected the condition for Ubuntu detection (use double equals '==')
+if [ "$os_name" == "Ubuntu" ]; then
     echo "Detected Ubuntu, running apt update commands"
-    
+fi
