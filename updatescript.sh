@@ -1,15 +1,17 @@
 #!/bin/bash
 
-# Voer het hostnamectl-commando uit en sla de uitvoer op in de variabele 'output'
+# Execute the hostnamectl command and store the output in the 'output' variable
 output=$(hostnamectl)
 
-# Zoek de regel die begint met "Operating System"
+# Search for the line that starts with "Operating System"
 os_line=$(echo "$output" | grep "Operating System")
 
-# Controleer of de regel is gevonden
-if [ -n "$os_line" ]; then
-    echo "Besturingssysteem: $os_line"
-else
-    echo "Besturingssysteem niet gevonden."
-fi
+# Extract the OS name using awk
+os_name=$(echo "$os_line" | awk -F ': ' '{print $2}')
 
+# Check if the OS name was found
+if [ -n "$os_name" ]; then
+    echo "Operating System: $os_name"
+else
+    echo "Operating System not found."
+fi
