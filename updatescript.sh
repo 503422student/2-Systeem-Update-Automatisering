@@ -8,13 +8,14 @@ output=$(hostnamectl)
 os_line=$(echo "$output" | grep "Operating System")
 
 # Extract the OS name using awk and remove the version and LTS information
-os_name=$(echo "$os_line" | awk -F ': ' '{print $2}' | cut -d ' ' -f1,2)
+os_name=$(echo "$os_line" | awk -F ': ' '{print $2}' | cut -d ' ' -f1)
 
 # Check if the OS name was found
 if [ -n "$os_name" ]; then
     echo "Operating System: $os_name"
 else
     echo "Operating System not found."
+    exit 1
 fi
 
 # Corrected the condition for Ubuntu detection (use double equals '==')
@@ -23,3 +24,4 @@ if [ "$os_name" == "Ubuntu" ]; then
     apt update
     apt upgrade -y
 fi
+
