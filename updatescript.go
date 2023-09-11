@@ -38,20 +38,20 @@ func getLinuxDistro() (string, error) {
 	}
 	defer file.Close()
 
-	// Create a buffer to store file contents
-	buf := make([]byte, 1024)
+	// Read the file contents into a string
+	var fileContents strings.Builder
+	buffer := make([]byte, 1024)
 
-	// Read the file contents into the buffer
-	n, err := file.Read(buf)
-	if err != nil {
-		return "", err
+	for {
+		n, err := file.Read(buffer)
+		if err != nil {
+			break
+		}
+		fileContents.Write(buffer[:n])
 	}
 
-	// Convert the buffer to a string
-	fileContents := string(buf[:n])
-
 	// Split the file contents into lines
-	lines := strings.Split(fileContents, "\n")
+	lines := strings.Split(fileContents.String(), "\n")
 
 	// Search for the distribution name in the lines
 	for _, line := range lines {
@@ -60,10 +60,10 @@ func getLinuxDistro() (string, error) {
 			distro := strings.TrimPrefix(line, "PRETTY_NAME=")
 			distro = strings.Trim(distro, "\"")
 
-			// Split the distribution string by space and return the first part
+			// Split the distribution string by space and return the first part in lowercase
 			parts := strings.Split(distro, " ")
 			if len(parts) > 0 {
-				return parts[0], nil
+				return strings.ToLower(parts[0]), nil
 			}
 		}
 	}
