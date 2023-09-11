@@ -56,6 +56,7 @@ func main() {
 }
 
 func getLinuxDistro() (string, error) {
+
 	// Open the /etc/os-release file
 	file, err := os.Open("/etc/os-release")
 	if err != nil {
