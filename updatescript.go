@@ -38,7 +38,7 @@ func getLinuxDistro() (string, error) {
 	}
 	defer file.Close()
 
-	// Read the file contents into a string
+	// Read the file contents into a buffer
 	var fileContents strings.Builder
 	buffer := make([]byte, 1024)
 
