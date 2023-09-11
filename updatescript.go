@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"os"
+	"os/exec"
 	"strings"
 	"time"
 )
@@ -28,6 +29,30 @@ func main() {
 	} else {
 		fmt.Println("Linux Distribution:", linuxDistro)
 	}
+
+	// If the Linux distribution is Ubuntu, run "apt update"
+	if strings.ToLower(linuxDistro) == "ubuntu" {
+		if err := runAptUpdate(); err != nil {
+			fmt.Println("Error running 'apt update':", err)
+		} else {
+			fmt.Println("'apt update' completed successfully.")
+		}
+
+		if err := runAptUpgrade(); err != nil {
+			fmt.Println("Error running 'apt upgrade -y':", err)
+		} else {
+			fmt.Println("'apt upgrade -y' completed successfully.")
+		}
+	}
+	// If the Linux distribution is Fedora, run "dnf upgrade"
+	if strings.ToLower(linuxDistro) == "fedora" {
+		if err := runDnfUpdate(); err != nil {
+			fmt.Println("Error runnning 'dnf upgrade':", err)
+		} else {
+			fmt.Println("'dnf upgrade' completed succesfully.")
+		}
+
+	}
 }
 
 func getLinuxDistro() (string, error) {
@@ -38,20 +63,20 @@ func getLinuxDistro() (string, error) {
 	}
 	defer file.Close()
 
-	// Read the file contents into a buffer
-	var fileContents strings.Builder
-	buffer := make([]byte, 1024)
+	// Create a buffer to store file contents
+	buf := make([]byte, 1024)
 
-	for {
-		n, err := file.Read(buffer)
-		if err != nil {
-			break
-		}
-		fileContents.Write(buffer[:n])
+	// Read the file contents into the buffer
+	n, err := file.Read(buf)
+	if err != nil {
+		return "", err
 	}
 
+	// Convert the buffer to a string
+	fileContents := string(buf[:n])
+
 	// Split the file contents into lines
-	lines := strings.Split(fileContents.String(), "\n")
+	lines := strings.Split(fileContents, "\n")
 
 	// Search for the distribution name in the lines
 	for _, line := range lines {
@@ -59,14 +84,30 @@ func getLinuxDistro() (string, error) {
 			// Extract the distribution name
 			distro := strings.TrimPrefix(line, "PRETTY_NAME=")
 			distro = strings.Trim(distro, "\"")
-
-			// Split the distribution string by space and return the first part in lowercase
-			parts := strings.Split(distro, " ")
-			if len(parts) > 0 {
-				return strings.ToLower(parts[0]), nil
-			}
+			return strings.ToLower(distro), nil
 		}
 	}
 
 	return "", fmt.Errorf("Distribution name not found")
+}
+
+func runAptUpdate() error {
+	cmd := exec.Command("apt", "update")
+	cmd.Stdout = os.Stdout
+	cmd.Stderr = os.Stderr
+	return cmd.Run()
+}
+
+func runDnfUpdate() error {
+	cmd := exec.Command("dnf", "upgrade", "-y")
+	cmd.Stdout = os.Stdout
+	cmd.Stderr = os.Stderr
+	return cmd.Run()
+}
+
+func runAptUpgrade() error {
+	cmd := exec.Command("apt", "upgrade", "-y")
+	cmd.Stdout = os.Stdout
+	cmd.Stderr = os.Stderr
+	return cmd.Run()
 }
