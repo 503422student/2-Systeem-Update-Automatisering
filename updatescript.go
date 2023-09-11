@@ -59,7 +59,12 @@ func getLinuxDistro() (string, error) {
 			// Extract the distribution name
 			distro := strings.TrimPrefix(line, "PRETTY_NAME=")
 			distro = strings.Trim(distro, "\"")
-			return distro, nil
+
+			// Split the distribution string by space and return the first part
+			parts := strings.Split(distro, " ")
+			if len(parts) > 0 {
+				return parts[0], nil
+			}
 		}
 	}
 
