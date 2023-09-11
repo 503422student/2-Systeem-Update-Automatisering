@@ -30,7 +30,7 @@ func main() {
 		fmt.Println("Linux Distribution:", linuxDistro)
 	}
 
-	// If the Linux distribution is Ubuntu, run "apt update"
+	// If the Linux distribution is Ubuntu, run "apt update" and "apt upgrade -y"
 	if strings.ToLower(linuxDistro) == "ubuntu" {
 		if err := runAptUpdate(); err != nil {
 			fmt.Println("Error running 'apt update':", err)
@@ -44,14 +44,14 @@ func main() {
 			fmt.Println("'apt upgrade -y' completed successfully.")
 		}
 	}
+
 	// If the Linux distribution is Fedora, run "dnf upgrade"
 	if strings.ToLower(linuxDistro) == "fedora" {
 		if err := runDnfUpdate(); err != nil {
-			fmt.Println("Error runnning 'dnf upgrade':", err)
+			fmt.Println("Error running 'dnf upgrade':", err)
 		} else {
-			fmt.Println("'dnf upgrade' completed succesfully.")
+			fmt.Println("'dnf upgrade' completed successfully.")
 		}
-
 	}
 }
 
@@ -91,6 +91,7 @@ func getLinuxDistro() (string, error) {
 	return "", fmt.Errorf("Distribution name not found")
 }
 
+// runAptUpdate runs the "apt update" command
 func runAptUpdate() error {
 	cmd := exec.Command("apt", "update")
 	cmd.Stdout = os.Stdout
@@ -98,6 +99,7 @@ func runAptUpdate() error {
 	return cmd.Run()
 }
 
+// runDnfUpdate runs the "dnf upgrade -y" command for Fedora
 func runDnfUpdate() error {
 	cmd := exec.Command("dnf", "upgrade", "-y")
 	cmd.Stdout = os.Stdout
@@ -105,6 +107,7 @@ func runDnfUpdate() error {
 	return cmd.Run()
 }
 
+// runAptUpgrade runs the "apt upgrade -y" command for Ubuntu
 func runAptUpgrade() error {
 	cmd := exec.Command("apt", "upgrade", "-y")
 	cmd.Stdout = os.Stdout
